@@ -4,7 +4,6 @@ namespace App;
 
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
-use GuzzleHttp\ClientInterface;
 
 class Container
 {
@@ -24,20 +23,20 @@ class Container
     private $logger;
 
     /**
-     * @var ClientInterface
+     * @var UrlTester
      */
-    private $client;
+    private $urlTester;
 
     public function __construct(
         SerializerInterface $serializer,
         Config $config,
         LoggerInterface $logger,
-        ClientInterface $client
+        UrlTester $urlTester
     ) {
         $this->serializer = $serializer;
         $this->config = $config;
         $this->logger = $logger;
-        $this->client = $client;
+        $this->urlTester = $urlTester;
     }
 
     /**
@@ -71,12 +70,12 @@ class Container
     }
 
     /**
-     * Get the value of client.
+     * Get the value of urlTester.
      *
-     * @return ClientInterface
+     * @return UrlTester
      */
-    public function getClient()
+    public function getUrlTester()
     {
-        return $this->client;
+        return $this->urlTester;
     }
 }

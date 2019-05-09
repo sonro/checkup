@@ -2,8 +2,6 @@
 
 namespace App;
 
-use GuzzleHttp\Psr7\Request;
-
 class Application
 {
     /**
@@ -18,16 +16,27 @@ class Application
 
     public function run()
     {
-        $this->testInternetAcess();
+        if (!$this->testInternetAccess()) {
+            return;
+        }
+
+        $urlFile = $this->container->getConfig()->getTestSitesFile();
+        $urlList = UrlListBuilder::buildFromFile($urlFile);
+
+        $badUrls = $this->container->getUrlTester()->testList($urlList);
+
+        var_dump($badUrls);
     }
 
-    private function testInternetAcess()
+    private function testInternetAccess(): bool
     {
-        $testRequest = new Request(
-            'GET',
-            $this->container->getConfig()->getTestUrl()
-        );
-        $testResponse = $this->container->getClient()->send($testRequest);
-        var_dump($testResponse);
+        $testUrl = $this->container->getConfig()->getTestUrl();
+        $result = $this->container->getUrlTester()->testOne($testUrl, false);
+        if (!$result) {
+            $this->container->getLogger()
+                ->warning('Unreachable test URL', [$testUrl]);
+        }
+
+        return $result;
     }
 }

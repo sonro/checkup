@@ -2,3 +2,4 @@ vendor/
 /var/
 /settings_inc.php
 /config.json
+/testsites
