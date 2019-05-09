@@ -2,15 +2,19 @@
 
 namespace App;
 
+use JMS\Serializer\Annotation\Type;
+
 class EmailRecipient
 {
     /**
      * @var string|null
+     * @Type("string")
      */
     private $name;
 
     /**
      * @var string
+     * @Type("string")
      */
     private $email;
 

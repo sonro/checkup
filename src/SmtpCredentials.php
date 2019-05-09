@@ -2,25 +2,31 @@
 
 namespace App;
 
+use JMS\Serializer\Annotation\Type;
+
 class SmtpCredentials
 {
     /**
      * @var string
+     * @Type("string")
      */
     private $username;
 
     /**
      * @var string
+     * @Type("string")
      */
     private $password;
 
     /**
      * @var string
+     * @Type("string")
      */
     private $server;
 
     /**
      * @var int
+     * @Type("int")
      */
     private $port;
 

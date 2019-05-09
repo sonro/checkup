@@ -3,31 +3,37 @@
 namespace App;
 
 use JMS\Serializer\SerializerInterface;
+use JMS\Serializer\Annotation\Type;
 
 class Config
 {
     /**
      * @var string
+     * @Type("string")
      */
     private $testUrl;
 
     /**
      * @var string
+     * @Type("string")
      */
     private $testSitesFile;
 
     /**
      * @var string
+     * @Type("string")
      */
     private $badSitesFile;
 
     /**
      * @var EmailRecipient[]
+     * @Type("array<App\EmailRecipient>")
      */
     private $emailRecipients;
 
     /**
      * @var SmtpCredentials
+     * @Type("App\SmtpCredentials")
      */
     private $smtpCredentials;
 
