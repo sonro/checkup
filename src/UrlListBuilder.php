@@ -11,6 +11,6 @@ class UrlListBuilder
             throw new \Exception("Unable to read file: $filename");
         }
 
-        return explode("\n", $data);
+        return array_filter(explode("\n", $data));
     }
 }

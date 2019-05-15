@@ -27,16 +27,23 @@ class Container
      */
     private $urlTester;
 
+    /**
+     * @var Emailer
+     */
+    private $emailer;
+
     public function __construct(
         SerializerInterface $serializer,
         Config $config,
         LoggerInterface $logger,
-        UrlTester $urlTester
+        UrlTester $urlTester,
+        Emailer $emailer
     ) {
         $this->serializer = $serializer;
         $this->config = $config;
         $this->logger = $logger;
         $this->urlTester = $urlTester;
+        $this->emailer = $emailer;
     }
 
     /**
@@ -77,5 +84,15 @@ class Container
     public function getUrlTester()
     {
         return $this->urlTester;
+    }
+
+    /**
+     * Get the value of emailer.
+     *
+     * @return Emailer
+     */
+    public function getEmailer()
+    {
+        return $this->emailer;
     }
 }

@@ -3,6 +3,7 @@
 use App\Application;
 use App\Config;
 use App\Container;
+use App\Emailer;
 use App\UrlTester;
 use JMS\Serializer\SerializerBuilder;
 use Monolog\Handler\StreamHandler;
@@ -20,12 +21,14 @@ $appLogger = new Logger('app');
 $appLogger->pushHandler(new StreamHandler(APP_LOG_FILE_NAME, Logger::INFO));
 $appClient = new Client(['timeout' => 2.0]);
 $appUrlTester = new UrlTester($appClient, $appLogger);
+$appEmailer = new Emailer($appLogger);
 
 $container = new Container(
     $appSerializer,
     $appConfig,
     $appLogger,
-    $appUrlTester
+    $appUrlTester,
+    $appEmailer
 );
 
 $application = new Application($container);

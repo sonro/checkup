@@ -31,6 +31,12 @@ class SmtpCredentials
     private $port;
 
     /**
+     * @var string
+     * @Type("string")
+     */
+    private $secureType;
+
+    /**
      * Get the value of username.
      *
      * @return string
@@ -38,20 +44,6 @@ class SmtpCredentials
     public function getUsername()
     {
         return $this->username;
-    }
-
-    /**
-     * Set the value of username.
-     *
-     * @param string $username
-     *
-     * @return self
-     */
-    public function setUsername(string $username)
-    {
-        $this->username = $username;
-
-        return $this;
     }
 
     /**
@@ -65,20 +57,6 @@ class SmtpCredentials
     }
 
     /**
-     * Set the value of password.
-     *
-     * @param string $password
-     *
-     * @return self
-     */
-    public function setPassword(string $password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
      * Get the value of server.
      *
      * @return string
@@ -86,20 +64,6 @@ class SmtpCredentials
     public function getServer()
     {
         return $this->server;
-    }
-
-    /**
-     * Set the value of server.
-     *
-     * @param string $server
-     *
-     * @return self
-     */
-    public function setServer(string $server)
-    {
-        $this->server = $server;
-
-        return $this;
     }
 
     /**
@@ -113,16 +77,12 @@ class SmtpCredentials
     }
 
     /**
-     * Set the value of port.
+     * Get the value of secureType.
      *
-     * @param int $port
-     *
-     * @return self
+     * @return string
      */
-    public function setPort(int $port)
+    public function getSecureType()
     {
-        $this->port = $port;
-
-        return $this;
+        return $this->secureType;
     }
 }
