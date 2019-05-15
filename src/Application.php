@@ -2,8 +2,6 @@
 
 namespace App;
 
-use PHPMailer\PHPMailer\PHPMailer;
-
 class Application
 {
     /**
@@ -29,21 +27,37 @@ class Application
 
         if ($this->isBadUrlNew($badUrls)) {
             if (!empty($badUrls)) {
-                $this->sendEmails($badUrls);
+                $this->sendBadUrls($badUrls);
+                $this->container->getLogger()->info('Alerting sysadmins');
+            } else {
+                $this->sendOk();
+                $this->container->getLogger()->info('All sites now working');
             }
 
             $this->saveBadUrls($badUrls);
         }
     }
 
-    private function sendEmails(array $badUrls)
+    private function sendOk()
+    {
+        $body = 'All test sites online!';
+        $subject = 'Sites are online';
+        $this->container->getEmailer()->send(
+            $subject,
+            $body,
+            $this->container->getConfig()->getEmailRecipients(),
+            $this->container->getConfig()->getSmtpCredentials()
+        );
+    }
+
+    private function sendBadUrls(array $badUrls)
     {
         $urlList = implode("\n", $badUrls);
         $body = sprintf("Unable to reach sites:\n%s\n", $urlList);
         $subject = 'Sites are down';
         $this->container->getEmailer()->send(
-            $subject, 
-            $body, 
+            $subject,
+            $body,
             $this->container->getConfig()->getEmailRecipients(),
             $this->container->getConfig()->getSmtpCredentials()
         );
