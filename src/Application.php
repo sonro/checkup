@@ -30,15 +30,10 @@ class Application
         if ($this->isBadUrlNew($badUrls)) {
             if (!empty($badUrls)) {
                 $this->sendEmails($badUrls);
-                echo "here\n";
             }
-
-            echo "there\n";
 
             $this->saveBadUrls($badUrls);
         }
-
-        var_dump($badUrls);
     }
 
     private function sendEmails(array $badUrls)
@@ -64,17 +59,13 @@ class Application
     private function isBadUrlNew(array $badUrls): bool
     {
         $urlFile = $this->container->getConfig()->getBadSitesFile();
-
         if (!file_exists($urlFile)) {
             return true;
         }
-
         $oldUrls = UrlListBuilder::buildFromFile($urlFile);
-
         if (empty($oldUrls) && !empty($badUrls)) {
             return true;
         }
-
         foreach ($oldUrls as $oldUrl) {
             if (array_search($oldUrl, $badUrls, true) === false) {
                 return true;
