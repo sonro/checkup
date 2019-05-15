@@ -44,6 +44,11 @@ class UrlTester
         $badUrls = [];
         foreach ($results as $url => $result) {
             if ($result['state'] === 'rejected') {
+                $response = $result['reason']->getResponse();
+                if ($response && $response->getStatusCode() === 401) {
+                    // is online but needs authorization
+                    continue;
+                }
                 $badUrls[] = $url;
                 $this->logger->warning('Unable to reach URL', [$url]);
             }
