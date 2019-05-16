@@ -20,8 +20,7 @@ class Application
             return;
         }
 
-        $urlFile = $this->container->getConfig()->getTestSitesFile();
-        $urlList = UrlListBuilder::buildFromFile($urlFile);
+        $urlList = UrlListBuilder::buildFromFile(APP_TESTSITES_FILE_NAME);
 
         $badUrls = $this->container->getUrlTester()->testList($urlList);
 
@@ -65,18 +64,16 @@ class Application
 
     private function saveBadUrls(array $badUrls)
     {
-        $urlFile = $this->container->getConfig()->getBadSitesFile();
         $output = implode("\n", $badUrls);
-        file_put_contents($urlFile, $output);
+        file_put_contents(APP_BADSITES_FILE_NAME, $output);
     }
 
     private function isBadUrlNew(array $badUrls): bool
     {
-        $urlFile = $this->container->getConfig()->getBadSitesFile();
-        if (!file_exists($urlFile)) {
+        if (!file_exists(APP_BADSITES_FILE_NAME)) {
             return true;
         }
-        $oldUrls = UrlListBuilder::buildFromFile($urlFile);
+        $oldUrls = UrlListBuilder::buildFromFile(APP_BADSITES_FILE_NAME);
         if (empty($oldUrls) && !empty($badUrls)) {
             return true;
         }

@@ -13,14 +13,14 @@ use GuzzleHttp\Client;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
 require_once __DIR__.'/vendor/autoload.php';
-require_once __DIR__.'/settings_inc.php';
+require_once __DIR__.'/src/settings_inc.php';
 
 AnnotationRegistry::registerLoader('class_exists');
 $appSerializer = SerializerBuilder::create()->build();
 $appConfig = Config::loadFromFile(APP_CONFIG_FILE_NAME, $appSerializer);
 $appLogger = new Logger('app');
 $appLogger->pushHandler(new StreamHandler(APP_LOG_FILE_NAME, Logger::INFO));
-$appClient = new Client(['timeout' => 2.0]);
+$appClient = new Client(['timeout' => $appConfig->getTimeout()]);
 $appUrlTester = new UrlTester($appClient, $appLogger);
 $appEmailer = new Emailer($appLogger);
 

@@ -14,16 +14,10 @@ class Config
     private $testUrl;
 
     /**
-     * @var string
-     * @Type("string")
+     * @var float
+     * @Type("float")
      */
-    private $testSitesFile;
-
-    /**
-     * @var string
-     * @Type("string")
-     */
-    private $badSitesFile;
+    private $timeout;
 
     /**
      * @var EmailRecipient[]
@@ -69,26 +63,6 @@ class Config
     }
 
     /**
-     * Get the value of testSitesFile.
-     *
-     * @return string
-     */
-    public function getTestSitesFile()
-    {
-        return $this->testSitesFile;
-    }
-
-    /**
-     * Get the value of badSitesFile.
-     *
-     * @return string
-     */
-    public function getBadSitesFile()
-    {
-        return $this->badSitesFile;
-    }
-
-    /**
      * Get the value of emailRecipients.
      *
      * @return EmailRecipient[]
@@ -106,5 +80,15 @@ class Config
     public function getSmtpCredentials()
     {
         return $this->smtpCredentials;
+    }
+
+    /**
+     * Get the value of timeout.
+     *
+     * @return float
+     */
+    public function getTimeout()
+    {
+        return $this->timeout;
     }
 }
