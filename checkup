@@ -14,6 +14,10 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 
 require_once __DIR__.'/vendor/autoload.php';
 require_once __DIR__.'/src/settings_inc.php';
+require_once __DIR__.'/src/utility_inc.php';
+
+moveExample(APP_CONFIG_FILE_NAME);
+moveExample(APP_TESTSITES_FILE_NAME);
 
 AnnotationRegistry::registerLoader('class_exists');
 $appSerializer = SerializerBuilder::create()->build();
@@ -23,6 +27,11 @@ $appLogger->pushHandler(new StreamHandler(APP_LOG_FILE_NAME, Logger::INFO));
 $appClient = new Client(['timeout' => $appConfig->getTimeout()]);
 $appUrlTester = new UrlTester($appClient, $appLogger);
 $appEmailer = new Emailer($appLogger);
+
+if ($appConfig->getSmtpCredentials()->getServer() === 'mail.example.com') {
+    echo 'Please fill out '.APP_CONFIG_FILE_NAME."\n";
+    die;
+}
 
 $container = new Container(
     $appSerializer,
