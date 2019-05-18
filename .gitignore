@@ -1,5 +1,6 @@
 vendor/
-/var/
-/settings_inc.php
+/var/**
+!/var/**/
+!/var/**/.gitkeep
 /config.json
 /testsites
