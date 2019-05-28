@@ -29,7 +29,7 @@ $appUrlTester = new UrlTester($appClient, $appLogger);
 $appEmailer = new Emailer($appLogger);
 
 if ($appConfig->getSmtpCredentials()->getServer() === 'mail.example.com') {
-    echo 'Please fill out '.APP_CONFIG_FILE_NAME."\n";
+    echo 'Please populate '.APP_CONFIG_FILE_NAME." with your configuration\n";
     die;
 }
 
