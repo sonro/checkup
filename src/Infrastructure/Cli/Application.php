@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sonro\Checkup\Infrastructure\Cli;
 
 final class Application
