@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Sonro\Checkup;
 
 class UrlListBuilder
 {

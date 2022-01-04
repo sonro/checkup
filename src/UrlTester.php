@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Sonro\Checkup;
 
 use GuzzleHttp\ClientInterface;
 use Psr\Log\LoggerInterface;

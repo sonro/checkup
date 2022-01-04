@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Sonro\Checkup;
 
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;

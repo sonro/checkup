@@ -1,22 +1,41 @@
 {
     "name": "sonro/checkup",
-    "description": "Check a list of websites are online",
     "type": "project",
+    "homepage": "https://github.com/sonro/checkup",
+    "readme": "README.md",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Christopher Morton",
+            "email": "sonro@gmx.com",
+            "role": "Maintainer"
+        }
+    ],
+    "support": {
+        "email": "sonro@gmx.com"
+    },
+    "description": "Check a list of websites are online",
+    "keywords": ["admin", "webmaster", "email", "monitor"],
+    "prefer-stable": true,
     "require": {
-        "monolog/monolog": "^1.24",
-        "guzzlehttp/guzzle": "^6.3",
-        "jms/serializer": "^3.0",
-        "phpmailer/phpmailer": "^6.0"
+        "php": ">=8.1",
+        "monolog/monolog": "^2.3",
+        "guzzlehttp/guzzle": "^7.4",
+        "jms/serializer": "^3.17",
+        "phpmailer/phpmailer": "^6.5"
+
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "Sonro\\Checkup\\": "src/"
         }
     },
-    "authors": [
-        {
-            "name": "sonro",
-            "email": "sonro@gmx.com"
+    "autoload-dev": {
+        "psr-4": {
+            "Sonro\\Checkup\\Tests\\": "tests/"
         }
-    ]
+    }
 }

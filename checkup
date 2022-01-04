@@ -1,11 +1,11 @@
 #!/usr/bin/env php
 <?php
 
-use App\Application;
-use App\Config;
-use App\Container;
-use App\Emailer;
-use App\UrlTester;
+use Sonro\Checkup\Application;
+use Sonro\Checkup\Config;
+use Sonro\Checkup\Container;
+use Sonro\Checkup\Emailer;
+use Sonro\Checkup\UrlTester;
 use JMS\Serializer\SerializerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;

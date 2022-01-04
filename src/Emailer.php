@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Sonro\Checkup;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use Psr\Log\LoggerInterface;

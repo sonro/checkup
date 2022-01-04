@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Sonro\Checkup;
 
 use JMS\Serializer\Annotation\Type;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Sonro\Checkup;
 
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\Annotation\Type;
@@ -21,13 +21,13 @@ class Config
 
     /**
      * @var EmailRecipient[]
-     * @Type("array<App\EmailRecipient>")
+     * @Type("array<Sonro\Checkup\EmailRecipient>")
      */
     private $emailRecipients;
 
     /**
      * @var SmtpCredentials
-     * @Type("App\SmtpCredentials")
+     * @Type("Sonro\Checkup\SmtpCredentials")
      */
     private $smtpCredentials;
 
