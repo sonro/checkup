@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+    backupGlobals="false"
+    testdox="true"
+    colors="true"
+    bootstrap="tests/bootstrap.php"
+    convertDeprecationsToExceptions="false">
+
+    <php>
+        <ini name="memory_limit"
+            value="-1" />
+        <ini name="error_reporting"
+            value="-1" />
+        <ini name="log_errors_max_len"
+            value="0" />
+        <ini name="xdebug.show_exception_trace"
+            value="0" />
+        <ini name="assert.exception"
+            value="1" />
+        <server name="APP_ENV"
+            value="test"
+            force="true" />
+        <server name="SHELL_VERBOSITY"
+            value="-1" />
+    </php>
+
+    <testsuites>
+        <testsuite name="Unit Tests">
+            <directory>./tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Integration Tests">
+            <directory>./tests/Itegration</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
