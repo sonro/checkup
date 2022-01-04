@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sonro\Checkup\Tests\Unit\Infrastructure\ServiceContainer;
 
 use PHPUnit\Framework\TestCase;
