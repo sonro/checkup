@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Sonro\Checkup\Tests\Unit\Infrastructure\Cli;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
-use Sonro\Checkup\Infrastructure\Cli\ArgumentParser;
 use Sonro\Checkup\Infrastructure\Cli\Arguments;
+use Sonro\Checkup\Infrastructure\Cli\ArgumentParser;
+use Sonro\Checkup\Infrastructure\Cli\ArgumentsError;
 
 class ArgumentParserTest extends TestCase
 {
@@ -172,48 +172,37 @@ class ArgumentParserTest extends TestCase
 
     public function test_parse_invalid_short_flag(): void
     {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Invalid argument: -x');
-        $parser = new ArgumentParser();
-        $parser->parse(['-x']);
+        $this->assertArgumentsError(['-x'], 'Invalid argument: -x');
     }
 
     public function test_parse_invalid_long_flag(): void
     {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Invalid argument: --xtra');
-        $parser = new ArgumentParser();
-        $parser->parse(['--xtra']);
+        $this->assertArgumentsError(['--xtra'], 'Invalid argument: --xtra');
     }
 
     public function test_parse_invalid_short_file(): void
     {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('state flag [--state] requires a value');
-        $parser = new ArgumentParser();
-        $parser->parse(['-s']);
+        $this->assertArgumentsError(['-s'], 'state flag [--state] requires a value');
     }
 
     public function test_parse_invalid_long_file(): void
     {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('config flag [--config] requires a value');
-        $parser = new ArgumentParser();
-        $parser->parse(['--config']);
+        $this->assertArgumentsError(['config flag [--config] requires a value'], '--config');
     }
 
-    public function test_parse_invalid_arg(): void {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Invalid argument: test');
-        $parser = new ArgumentParser();
-        $parser->parse(['test']);
+    public function test_parse_invalid_arg(): void
+    {
+        $this->assertArgumentsError(['test'], 'Invalid argument: test');
     }
 
-    public function test_parse_mixed_valid_and_invalid_args(): void {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Invalid argument: test');
-        $parser = new ArgumentParser();
-        $parser->parse(['-v', 'test']);
+    public function test_parse_mixed_valid_and_invalid_args(): void
+    {
+        $this->assertArgumentsError(['-v', 'test'], 'Invalid argument: test');
+    }
+
+    public function test_parse_mixed_valid_and_invalid_flags_together(): void
+    {
+        $this->assertArgumentsError(['-vxd'], 'Invalid argument: -x');
     }
 
     private function assertParseOneFlag(string $arg, string $propName): void
@@ -234,5 +223,13 @@ class ArgumentParserTest extends TestCase
         foreach ($propNames as $key => $value) {
             $this->assertSame($args->$key, $value);
         }
+    }
+
+    private function assertArgumentsError(array $args, string $msg): void
+    {
+        $this->expectException(ArgumentsError::class);
+        $this->expectExceptionMessage($msg);
+        $parser = new ArgumentParser();
+        $parser->parse($args);
     }
 }
