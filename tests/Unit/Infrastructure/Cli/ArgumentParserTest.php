@@ -30,10 +30,12 @@ class ArgumentParserTest extends TestCase
         $expected = new Arguments();
         $actual = $parser->parse([]);
         $this->assertSame($expected->verbose, $actual->verbose);
+        $this->assertSame($expected->version, $actual->version);
         $this->assertSame($expected->dryRun, $actual->dryRun);
         $this->assertSame($expected->help, $actual->help);
         $this->assertSame($expected->configFile, $actual->configFile);
         $this->assertSame($expected->stateFile, $actual->stateFile);
+        $this->assertSame($expected->logFile, $actual->logFile);
     }
 
     public function test_parse_verbose_short(): void
@@ -44,6 +46,16 @@ class ArgumentParserTest extends TestCase
     public function test_parse_verbose_long(): void
     {
         $this->assertParseOneFlag('--verbose', 'verbose');
+    }
+
+    public function test_parse_version_short(): void
+    {
+        $this->assertParseOneFlag('-V', 'version');
+    }
+
+    public function test_parse_version_long(): void
+    {
+        $this->assertParseOneFlag('--version', 'version');
     }
 
     public function test_parse_dry_run_short(): void
@@ -86,27 +98,37 @@ class ArgumentParserTest extends TestCase
         $this->assertParseOneFile('--state', 'stateFile');
     }
 
+    public function test_parse_log_file_short(): void
+    {
+        $this->assertParseOneFile('-l', 'logFile');
+    }
+
+    public function test_parse_log_file_long(): void
+    {
+        $this->assertParseOneFile('--log', 'logFile');
+    }
+
     public function test_parse_all_flags_together(): void
     {
         $this->assertParseMulti(
-            ['-vdh'],
-            ['verbose' => true, 'dryRun' => true, 'help' => true]
+            ['-vVdh'],
+            $this->allFlagsArrayTrue(),
         );
     }
 
     public function test_parse_all_short_flags_seperated(): void
     {
         $this->assertParseMulti(
-            ['-v', '-d', '-h'],
-            ['verbose' => true, 'dryRun' => true, 'help' => true]
+            ['-v', '-V', '-d', '-h'],
+            $this->allFlagsArrayTrue(),
         );
     }
 
     public function test_parse_all_long_flags(): void
     {
         $this->assertParseMulti(
-            ['--verbose', '--dry-run', '--help'],
-            ['verbose' => true, 'dryRun' => true, 'help' => true]
+            ['--verbose', '--version', '--dry-run', '--help'],
+            $this->allFlagsArrayTrue(),
         );
     }
 
@@ -114,9 +136,10 @@ class ArgumentParserTest extends TestCase
     {
         $configFile = 'test.yml';
         $stateFile = 'test.json';
+        $logFile = 'test.log';
         $this->assertParseMulti(
-            ['-c', $configFile, '-s', $stateFile],
-            ['configFile' => $configFile, 'stateFile' => $stateFile]
+            ['-c', $configFile, '-s', $stateFile, '-l', $logFile],
+            $this->allFilesArray($configFile, $stateFile, $logFile),
         );
     }
 
@@ -124,9 +147,10 @@ class ArgumentParserTest extends TestCase
     {
         $configFile = 'test.yml';
         $stateFile = 'test.json';
+        $logFile = 'test.log';
         $this->assertParseMulti(
-            ['--config', $configFile, '--state', $stateFile],
-            ['configFile' => $configFile, 'stateFile' => $stateFile]
+            ['--config', $configFile, '--state', $stateFile, '--log', $logFile],
+            $this->allFilesArray($configFile, $stateFile, $logFile),
         );
     }
 
@@ -134,15 +158,21 @@ class ArgumentParserTest extends TestCase
     {
         $configFile = 'test.yml';
         $stateFile = 'test.json';
+        $logFile = 'test.log';
         $this->assertParseMulti(
-            ['-c', $configFile, '-s', $stateFile, '-v', '-d', '-h'],
             [
-                'configFile' => $configFile,
-                'stateFile' => $stateFile,
-                'verbose' => true,
-                'dryRun' => true,
-                'help' => true
-            ]
+                '-c',
+                $configFile, 
+                '-s',
+                $stateFile,
+                '-l',
+                $logFile,
+                '-v',
+                '-V',
+                '-d', 
+                '-h',
+            ],
+            $this->allArgs($configFile, $stateFile, $logFile),
         );
     }
 
@@ -150,23 +180,21 @@ class ArgumentParserTest extends TestCase
     {
         $configFile = 'test.yml';
         $stateFile = 'test.json';
+        $logFile = 'test.log';
         $this->assertParseMulti(
             [
                 '--config',
                 $configFile,
                 '--state',
                 $stateFile,
+                '--log',
+                $logFile,
                 '--verbose',
+                '--version',
                 '--dry-run',
                 '--help'
             ],
-            [
-                'configFile' => $configFile,
-                'stateFile' => $stateFile,
-                'verbose' => true,
-                'dryRun' => true,
-                'help' => true
-            ]
+            $this->allArgs($configFile, $stateFile, $logFile),
         );
     }
 
@@ -231,5 +259,38 @@ class ArgumentParserTest extends TestCase
         $this->expectExceptionMessage($msg);
         $parser = new ArgumentParser();
         $parser->parse($args);
+    }
+
+    private function allFlagsArrayTrue(): array
+    {
+        return [
+            'verbose' => true,
+            'version' => true,
+            'dryRun' => true,
+            'help' => true,
+        ];
+    }
+
+    private function allFilesArray(
+        string $configFile = 'test.yml',
+        string $stateFile = 'test.json',
+        string $logFile = 'test.log',
+    ): array {
+        return [
+            'configFile' => $configFile,
+            'stateFile' => $stateFile,
+            'logFile' => $logFile,
+        ];
+    }
+
+    private function allArgs(
+        string $configFile = 'test.yml',
+        string $stateFile = 'test.json',
+        string $logFile = 'test.log',
+    ): array {
+        return array_merge(
+            $this->allFlagsArrayTrue(),
+            $this->allFilesArray($configFile, $stateFile, $logFile),
+        );
     }
 }

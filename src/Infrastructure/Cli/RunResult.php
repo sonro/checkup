@@ -8,4 +8,5 @@ enum RunResult
 {
     case Success;
     case ArgumentsError;
+    case EnvironmentError;
 }

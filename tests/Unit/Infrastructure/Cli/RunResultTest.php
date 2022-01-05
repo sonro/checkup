@@ -18,6 +18,7 @@ class RunResultTest extends TestCase
         $expected = [
             RunResult::Success,
             RunResult::ArgumentsError,
+            RunResult::EnvironmentError,
         ];
         $this->assertSame($expected, RunResult::cases());
     }
