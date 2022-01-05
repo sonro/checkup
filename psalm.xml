@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<psalm errorLevel="1"
+    resolveFromConfigFile="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd">
+    <projectFiles>
+        <directory name="src" />
+        <ignoreFiles>
+            <file name="src/Application.php" />
+            <file name="src/Config.php" />
+            <file name="src/Container.php" />
+            <file name="src/Emailer.php" />
+            <file name="src/EmailRecipient.php" />
+            <file name="src/settings_inc.php" />
+            <file name="src/SmtpCredentials.php" />
+            <file name="src/UrlListBuilder.php" />
+            <file name="src/UrlTester.php" />
+            <file name="src/utility_inc.php" />
+
+            <directory name="vendor" />
+            <directory name="tests" />
+        </ignoreFiles>
+    </projectFiles>
+</psalm>
