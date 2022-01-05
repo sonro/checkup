@@ -8,4 +8,5 @@ require __DIR__.'/bootstrap.php';
 
 $container = new ServiceContainer();
 $app = $container->getApplication();
-$app->run($argv);
+$args = array_slice($argv, 1);
+$app->runWithArgs($args);

@@ -13,26 +13,36 @@ class ArgumentsTest extends TestCase
     {
         $args = new Arguments();
         $this->assertFalse($args->verbose);
+        $this->assertFalse($args->version);
         $this->assertFalse($args->dryRun);
         $this->assertFalse($args->help);
         $this->assertNull($args->configFile);
         $this->assertNull($args->stateFile);
+        $this->assertNull($args->logFile);
     }
 
     public function test_set_all(): void
     {
-        $verbose = true;
-        $dryRun = true;
-        $help = true;
         $configFile = 'test.yml';
         $stateFile = 'test.json';
+        $logFile = 'test.log';
 
-        $args = new Arguments($verbose, $dryRun, $help, $configFile, $stateFile);
+        $args = new Arguments(
+            true,
+            true,
+            true,
+            true,
+            $configFile, 
+            $stateFile,
+            $logFile,
+        );
 
         $this->assertTrue($args->verbose);
+        $this->assertTrue($args->version);
         $this->assertTrue($args->dryRun);
         $this->assertTrue($args->help);
         $this->assertSame($configFile, $args->configFile);
         $this->assertSame($stateFile, $args->stateFile);
+        $this->assertSame($logFile, $args->logFile);
     }
 }

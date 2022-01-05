@@ -12,6 +12,8 @@ class ArgumentParser
     // List of all possible arguments.
     private const VERBOSE_SHORT = 'v';
     private const VERBOSE_LONG = 'verbose';
+    private const VERSION_SHORT = 'V';
+    private const VERSION_LONG = 'version';
     private const DRY_RUN_SHORT = 'd';
     private const DRY_RUN_LONG = 'dry-run';
     private const HELP_SHORT = 'h';
@@ -20,6 +22,8 @@ class ArgumentParser
     private const CONFIG_LONG = 'config';
     private const STATE_SHORT = 's';
     private const STATE_LONG = 'state';
+    private const LOG_SHORT = 'l';
+    private const LOG_LONG = 'log';
 
     /**
      * @var array<string, bool>
@@ -86,12 +90,14 @@ class ArgumentParser
     {
         $this->flags = [
             self::VERBOSE_LONG => false,
+            self::VERSION_LONG => false,
             self::DRY_RUN_LONG => false,
             self::HELP_LONG => false,
         ];
         $this->files = [
             self::CONFIG_LONG => null,
             self::STATE_LONG => null,
+            self::LOG_LONG => null,
         ];
     }
 
@@ -108,24 +114,28 @@ class ArgumentParser
         // extract and reset parser's state in case there is an error while
         // building the Arguments object
         $verbose = $this->flags[self::VERBOSE_LONG];
+        $version = $this->flags[self::VERSION_LONG];
         $dryRun = $this->flags[self::DRY_RUN_LONG];
         $help = $this->flags[self::HELP_LONG];
         $configFile = $this->files[self::CONFIG_LONG];
         $stateFile = $this->files[self::STATE_LONG];
+        $logFile = $this->files[self::LOG_LONG];
 
         $this->reset();
 
         return new Arguments(
             $verbose,
+            $version,
             $dryRun,
             $help,
             $configFile,
-            $stateFile
+            $stateFile,
+            $logFile,
         );
     }
 
     /**
-     * Parse a short (-v) argument.
+     * Parse a short (-a) argument.
      * 
      * @param string $arg
      * @param string|null $nextArg if the $arg needs a value, $nextArg is used
@@ -152,11 +162,19 @@ class ArgumentParser
             return true;
         }
 
+        if ($match === self::LOG_SHORT) {
+            $this->setFile(self::LOG_LONG, $nextArg);
+            // used the next argument
+            return true;
+        }
+
         $chars = str_split($match);
 
         foreach ($chars as $char) {
             match ($char) {
                 self::VERBOSE_SHORT => $this->checkAndSet(self::VERBOSE_LONG),
+
+                self::VERSION_SHORT => $this->checkAndSet(self::VERSION_LONG),
 
                 self::DRY_RUN_SHORT => $this->checkAndSet(self::DRY_RUN_LONG),
 
@@ -171,7 +189,7 @@ class ArgumentParser
     }
 
     /**
-     * Parse a long (--verbose) argument.
+     * Parse a long (--argument) argument.
      * 
      * @param string $arg
      * @param string|null $nextArg if the $arg needs a value, $nextArg is used
@@ -198,8 +216,16 @@ class ArgumentParser
             return true;
         }
 
+        if ($match == self::LOG_LONG) {
+            $this->setFile(self::LOG_LONG, $nextArg);
+            // used the next argument
+            return true;
+        }
+
         match ($match) {
             self::VERBOSE_LONG => $this->checkAndSet(self::VERBOSE_LONG),
+
+            self::VERSION_LONG => $this->checkAndSet(self::VERSION_LONG),
 
             self::DRY_RUN_LONG => $this->checkAndSet(self::DRY_RUN_LONG),
 
