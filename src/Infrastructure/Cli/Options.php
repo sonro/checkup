@@ -22,6 +22,19 @@ class Options
     ) {
     }
 
+    public static function default(): self
+    {
+        return new self(
+            false,
+            false,
+            false,
+            false,
+            self::envFile(self::DEFAULT_CONFIG_NAME),
+            self::envFile(self::DEFAULT_STATE_NAME),
+            self::envFile(self::DEFAULT_LOG_NAME),
+        );
+    }
+
     public static function fromArguments(Arguments $args): self
     {
         $configFile = self::filePathOrEnv(
@@ -54,6 +67,11 @@ class Options
             return $path;
         }
 
+        return self::envFile($name);
+    }
+
+    private static function envFile(string $name): string
+    {
         $directory = getenv(self::DIR_ENV_NAME);
         if ($directory === false) {
             throw new EnvironmentError(

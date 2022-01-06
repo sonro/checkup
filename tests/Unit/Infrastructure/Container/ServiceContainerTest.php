@@ -31,4 +31,18 @@ class ServiceContainerTest extends TestCase
         $this->assertSame($app1, $app2);
     }
 
+    public function test_get_logger_fresh(): void
+    {
+        $container = new ServiceContainer();
+        $logger = $container->getLogger();
+        $this->assertInstanceOf(\Monolog\Logger::class, $logger);
+    }
+
+    public function test_get_logger_cached(): void
+    {
+        $container = new ServiceContainer();
+        $logger = $container->getLogger();
+        $cached = $container->getLogger();
+        $this->assertSame($logger, $cached);
+    }
 }

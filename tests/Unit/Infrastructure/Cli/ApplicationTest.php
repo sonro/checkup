@@ -11,6 +11,8 @@ use Sonro\Checkup\Infrastructure\Cli\Application;
 use Sonro\Checkup\Infrastructure\Cli\ArgumentParser;
 use Sonro\Checkup\Infrastructure\Cli\Arguments;
 use Sonro\Checkup\Infrastructure\Cli\ArgumentsError;
+use Sonro\Checkup\Infrastructure\Cli\EnvironmentError;
+use Sonro\Checkup\Infrastructure\Cli\Options;
 use Sonro\Checkup\Infrastructure\Cli\RunResult;
 
 class ApplicationTest extends TestCase
@@ -21,22 +23,37 @@ class ApplicationTest extends TestCase
         $this->assertInstanceOf(Application::class, $app);
     }
 
-    public function 
-        test_run_with_args_with_args_returns_run_with_args_result()
-        : void
+    public function test_run_with_args_returns_run_result() : void
     {
         $app = $this->createApplication();
         $result = $app->runWithArgs([]);
         $this->assertInstanceOf(RunResult::class, $result);
     }
 
-    public function test_invalid_args_results_in_arguments_error()
+    public function test_run_with_invalid_args_returns_arguments_error(): void
     {
         $parser = $this->createArgumentParserStub();
         $parser->method('parse')->willThrowException(new ArgumentsError());
         $app = $this->createApplication($parser);
         $result = $app->runWithArgs(["invalid-arg"]);
         $this->assertSame(RunResult::ArgumentsError, $result);
+    }
+
+    public function test_invalid_env_returns_env_error(): void
+    {
+        $parser = $this->createArgumentParserStub();
+        $parser->method('parse')->willThrowException(new EnvironmentError());
+        $app = $this->createApplication($parser);
+        $result = $app->runWithArgs([]);
+        $this->assertSame(RunResult::EnvironmentError, $result);
+    }
+
+    public function test_run_with_options_returns_run_result(): void
+    {
+        $app = $this->createApplication();
+        $options = Options::default();
+        $result = $app->runWithOptions($options);
+        $this->assertInstanceOf(RunResult::class, $result);
     }
 
     private function createApplication(?Stub $parser = null): Application

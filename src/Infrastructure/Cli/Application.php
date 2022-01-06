@@ -6,6 +6,7 @@ namespace Sonro\Checkup\Infrastructure\Cli;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+
 class Application
 {
     const VERSION = 'v0.2.0';
@@ -50,6 +51,12 @@ EOD;
         return $this->runWithOptions($options);
     }
 
+    /**
+     * Run the application with options.
+     *
+     * @param Options $options
+     * @return RunResult
+     */
     public function runWithOptions(Options $options): RunResult
     {
         if ($options->help) {
