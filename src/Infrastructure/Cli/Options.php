@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Sonro\Checkup\Infrastructure\Cli;
 
+/**
+ * Program options.
+ */
 class Options
 {
     const DIR_ENV_NAME = 'CHECKUP_APP_DIR';
@@ -22,6 +25,16 @@ class Options
     ) {
     }
 
+    /**
+     * The default options for the program.
+     * 
+     * None of the flags are set.
+     * The file paths are all in the CHECKUP_APP_DIR environment variable.
+     *
+     * @return self
+     * @throws EnvironmentError if the CHECKUP_APP_DIR environment 
+     * variable is not set.
+     */
     public static function default(): self
     {
         return new self(
@@ -35,6 +48,18 @@ class Options
         );
     }
 
+    /**
+     * Construct from an Arguments object.
+     * 
+     * If the Arguments object lacks a file path for a file,
+     * the default file path is used. This uses the CHECKUP_APP_DIR
+     * environment variable.
+     *
+     * @param Arguments $args
+     * @return self
+     * @throws EnvironmentError if the CHECKUP_APP_DIR environment
+     * variable is needed and not set.
+     */
     public static function fromArguments(Arguments $args): self
     {
         $configFile = self::filePathOrEnv(
