@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace Sonro\Checkup\Infrastructure\Cli;
 
+use Exception;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Sonro\Checkup\Domain\CheckupService;
+use Sonro\Checkup\Domain\Model\Config;
+use Sonro\Checkup\Domain\Model\State;
+use Sonro\Checkup\Infrastructure\Persistance\FileConfigStore;
+use Sonro\Checkup\Infrastructure\Persistance\FileStateStore;
 
 class Application
 {
@@ -29,9 +35,13 @@ Usage: checkup [options]
 
 EOD;
 
+    private ?FileConfigStore $configStore = null;
+    private ?FileStateStore $stateStore = null;
+
     public function __construct(
         private ArgumentParser $argParser,
         private Logger $logger,
+        private CheckupService $checkup,
     ) {
     }
 
@@ -67,7 +77,18 @@ EOD;
             $this->printVersion();
             return RunResult::Success;
         }
-        $this->setupLogging($options);
+
+        $this->setup($options);
+
+        try {
+            $config = $this->loadConfig($options);
+            $state = $this->loadState($options);
+            $this->checkup->execute($config, $state);
+            $this->saveState($state, $options);
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
+            return RunResult::Failure;
+        }
 
         return RunResult::Success;
     }
@@ -110,6 +131,57 @@ EOD;
         echo PHP_EOL.self::HELP.PHP_EOL;
     }
 
+    private function setup(Options $options): void
+    {
+        $this->setupLogging($options);
+        $this->setupStores($options);
+    }
+
+    private function loadConfig(Options $options): Config
+    {
+        if ($this->configStore === null) {
+            throw new Exception('Unable to configure config loader');
+        }
+
+        $this->logger->debug("Loading configuration from {$options->configFile}");
+        $config = $this->configStore->load();
+        $this->logger->info("Configuration loaded");
+
+        return $config;
+    }
+
+    private function loadState(Options $options): State
+    {
+        if ($this->stateStore === null) {
+            throw new Exception('Unable to configure state loader/saver');
+        }
+
+        $this->logger->debug("Loading state from {$options->stateFile}");
+
+        if ($options->dryRun) {
+            $state = new State();
+            $this->logger->info("Dummy state loaded");
+        } else {
+            $state = $this->stateStore->load();
+            $this->logger->info("State loaded");
+        }
+
+        return $state;
+    }
+
+    private function saveState(State $state, Options $options): void
+    {
+        if ($this->stateStore === null) {
+            throw new Exception('Unable to configure state loader/saver');
+        }
+
+        if (!$options->dryRun) {
+            $this->logger->debug("Saving state to {$options->stateFile}");
+            $this->stateStore->store($state);
+            $this->logger->info("State saved");
+        }
+    }
+
     private function setupLogging(Options $options): void
     {
         if ($options->verbose) {
@@ -121,5 +193,12 @@ EOD;
         }
         $this->logger->pushHandler(new StreamHandler($options->logFile, Logger::INFO));
         $this->logger->pushHandler(new StreamHandler("php://stderr", $level));
+        $this->logger->debug("Verbose mode enabled");
+    }
+
+    private function setupStores(Options $options): void
+    {
+        $this->configStore = new FileConfigStore($options->configFile);
+        $this->stateStore = new FileStateStore($options->stateFile);
     }
 }

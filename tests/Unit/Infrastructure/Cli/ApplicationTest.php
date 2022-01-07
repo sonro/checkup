@@ -7,6 +7,7 @@ namespace Sonro\Checkup\Tests\Unit\Infrastructure\Cli;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\Stub;
+use Sonro\Checkup\Domain\CheckupService;
 use Sonro\Checkup\Infrastructure\Cli\Application;
 use Sonro\Checkup\Infrastructure\Cli\ArgumentParser;
 use Sonro\Checkup\Infrastructure\Cli\Arguments;
@@ -62,7 +63,8 @@ class ApplicationTest extends TestCase
             $parser = $this->createArgumentParserStub();
         }
         $logger = $this->createStub(Logger::class);
-        return new Application($parser, $logger);
+        $checkup = $this->createStub(CheckupService::class);
+        return new Application($parser, $logger, $checkup);
     }
 
     /**
