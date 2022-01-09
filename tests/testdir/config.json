@@ -1,0 +1,18 @@
+{
+    "test_url": "https://google.com",
+    "timeout": 10.0,
+    "email_recipients": [
+        {
+            "name": "Test",
+            "email": "test@example.com"
+        }
+    ],
+    "smtp_credentials": {
+        "username": "admin@example.com",
+        "password": "thisisapassword",
+        "server": "mail.example.com",
+        "port": 465,
+        "secure_type": "ssl"
+    },
+    "urls": [ "https://google.com" ]
+}

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Sonro\Checkup\Infrastructure\Container;
 
-use Sonro\Checkup\Infrastructure\Cli\Application;
-use Sonro\Checkup\Infrastructure\Cli\ArgumentParser;
 use Monolog\Logger;
 use Sonro\Checkup\Domain\CheckupService;
-use Sonro\Checkup\Infrastructure\Persistance\FileConfigStore;
+use Sonro\Checkup\Infrastructure\Cli\Application;
+use Sonro\Checkup\Infrastructure\Cli\ArgumentParser;
+use Sonro\Checkup\Infrastructure\Persistance\Serializer;
 
 class ServiceContainer
 {
@@ -16,6 +16,7 @@ class ServiceContainer
     private ?ArgumentParser $argumentParser = null;
     private ?Logger $logger = null;
     private ?CheckupService $checkupService = null;
+    private ?Serializer $serializer = null;
 
     public function __construct(
     ) {
@@ -28,6 +29,7 @@ class ServiceContainer
                 $this->getArgumentParser(),
                 $this->getLogger(),
                 $this->getCheckupService(),
+                $this->getSerializer(),
             );
         }
 
@@ -59,5 +61,14 @@ class ServiceContainer
         }
 
         return $this->checkupService;
+    }
+
+    public function getSerializer(): Serializer
+    {
+        if ($this->serializer === null) {
+            $this->serializer = new Serializer();
+        }
+
+        return $this->serializer;
     }
 }

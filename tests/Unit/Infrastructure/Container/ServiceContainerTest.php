@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Sonro\Checkup\Domain\CheckupService;
 use Sonro\Checkup\Infrastructure\Cli\Application;
 use Sonro\Checkup\Infrastructure\Container\ServiceContainer;
+use Sonro\Checkup\Infrastructure\Persistance\Serializer;
 
 class ServiceContainerTest extends TestCase
 {
@@ -46,6 +47,16 @@ class ServiceContainerTest extends TestCase
     public function test_get_checkup_service_cached(): void
     {
         $this->assertServiceCached("checkupService", CheckupService::class);
+    }
+
+    public function test_get_serializer_fresh(): void
+    {
+        $this->assertServiceFresh("serializer", Serializer::class);
+    }
+
+    public function test_get_serailizer_cached(): void
+    {
+        $this->assertServiceCached("serializer", Serializer::class);
     }
 
     private function assertServiceFresh(string $name, string $fqcn): void

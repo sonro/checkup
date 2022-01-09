@@ -12,6 +12,7 @@ use Sonro\Checkup\Domain\Model\Config;
 use Sonro\Checkup\Domain\Model\State;
 use Sonro\Checkup\Infrastructure\Persistance\FileConfigStore;
 use Sonro\Checkup\Infrastructure\Persistance\FileStateStore;
+use Sonro\Checkup\Infrastructure\Persistance\Serializer;
 
 class Application
 {
@@ -42,6 +43,7 @@ EOD;
         private ArgumentParser $argParser,
         private Logger $logger,
         private CheckupService $checkup,
+        private Serializer $serializer,
     ) {
     }
 
@@ -198,7 +200,7 @@ EOD;
 
     private function setupStores(Options $options): void
     {
-        $this->configStore = new FileConfigStore($options->configFile);
+        $this->configStore = new FileConfigStore($options->configFile, $this->serializer);
         $this->stateStore = new FileStateStore($options->stateFile);
     }
 }

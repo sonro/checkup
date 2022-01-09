@@ -15,6 +15,7 @@ use Sonro\Checkup\Infrastructure\Cli\ArgumentsError;
 use Sonro\Checkup\Infrastructure\Cli\EnvironmentError;
 use Sonro\Checkup\Infrastructure\Cli\Options;
 use Sonro\Checkup\Infrastructure\Cli\RunResult;
+use Sonro\Checkup\Infrastructure\Persistance\Serializer;
 
 class ApplicationTest extends TestCase
 {
@@ -64,7 +65,8 @@ class ApplicationTest extends TestCase
         }
         $logger = $this->createStub(Logger::class);
         $checkup = $this->createStub(CheckupService::class);
-        return new Application($parser, $logger, $checkup);
+        $serializer = $this->createStub(Serializer::class);
+        return new Application($parser, $logger, $checkup, $serializer);
     }
 
     /**
