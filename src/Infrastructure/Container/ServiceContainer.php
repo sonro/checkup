@@ -57,7 +57,9 @@ class ServiceContainer
     public function getCheckupService(): CheckupService
     {
         if ($this->checkupService === null) {
-            $this->checkupService = new CheckupService();
+            $this->checkupService = new CheckupService(
+                $this->getLogger(),
+            );
         }
 
         return $this->checkupService;
