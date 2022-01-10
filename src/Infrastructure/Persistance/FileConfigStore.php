@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Sonro\Checkup\Infrastructure\Persistance;
 
-use Exception;
 use Sonro\Checkup\Domain\Model\Config;
 use Sonro\Checkup\Domain\Model\ConfigStoreInterface;
 use Sonro\Checkup\Infrastructure\Validator\ConfigValidator;
@@ -23,8 +22,12 @@ class FileConfigStore implements ConfigStoreInterface
     public function load(): Config
     {
         // get data from file
-        $content = file_get_contents($this->path);
-        if ($content === false) {
+        try {
+            $content = file_get_contents($this->path);
+            if ($content === false) {
+                throw StoreError::fileRead($this->path);
+            }
+        } catch (\Throwable $_e) {
             throw StoreError::fileRead($this->path);
         }
 
@@ -32,7 +35,7 @@ class FileConfigStore implements ConfigStoreInterface
         /** @var Config|null */
         $config =  $this->serializer->deserialize($content, Config::class);
         if (!$config instanceof Config) {
-            throw new Exception("Unable to parse config file: {$this->path}");
+            throw StoreError::fileParse($this->path);
         }
 
         // validate data

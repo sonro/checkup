@@ -193,7 +193,10 @@ EOD;
         } else {
             $level = Logger::ERROR;
         }
-        $this->logger->pushHandler(new StreamHandler($options->logFile, Logger::INFO));
+        
+        if (!$options->dryRun) {
+            $this->logger->pushHandler(new StreamHandler($options->logFile, Logger::INFO));
+        }
         $this->logger->pushHandler(new StreamHandler("php://stderr", $level));
         $this->logger->debug("Verbose mode enabled");
     }
@@ -201,6 +204,6 @@ EOD;
     private function setupStores(Options $options): void
     {
         $this->configStore = new FileConfigStore($options->configFile, $this->serializer);
-        $this->stateStore = new FileStateStore($options->stateFile);
+        $this->stateStore = new FileStateStore($options->stateFile, $this->serializer);
     }
 }
